@@ -1,0 +1,182 @@
+:root {
+    --primary-color: #2196F3;
+    --primary-dark: #1976D2;
+    --accent-color: #FF4081;
+    --text-color: #333;
+    --background-color: #f5f5f5;
+    --card-color: #fff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.button:hover {
+    background-color: var(--primary-dark);
+}
+
+.button .material-icons {
+    font-size: 1.25rem;
+}
+
+.files-container {
+    background-color: var(--card-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.files-container h2 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+#files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.file-item:hover {
+    background-color: #e9ecef;
+}
+
+.file-name {
+    flex-grow: 1;
+    margin-right: 1rem;
+}
+
+.button-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.download-file,
+.remove-file {
+    cursor: pointer;
+    padding: 0.25rem;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.download-file:hover,
+.remove-file:hover {
+    transform: scale(1.1);
+}
+
+.download-file {
+    color: var(--primary-color);
+}
+
+.remove-file {
+    color: #dc3545;
+}
+
+.download-file .material-icons,
+.remove-file .material-icons {
+    font-size: 1.25rem;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--card-color);
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#qr-code {
+    max-width: 100%;
+    height: auto;
+    margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+    .actions {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+} 
