@@ -1,63 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TempShare</title>
-    <link rel="manifest" href="/manifest.json">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>TempShare</h1>
-        
-        <div class="actions">
-            <label for="file-input" class="button">
-                <span class="material-icons">add</span>
-                Add File
-            </label>
-            <input type="file" id="file-input" style="display: none;">
-            
-            <button id="share-link" class="button">
-                <span class="material-icons">share</span>
-                Share Link
-            </button>
-            
-            <button id="generate-qr" class="button">
-                <span class="material-icons">qr_code</span>
-                Generate QR
-            </button>
-        </div>
+{% extends "base.html" %}
 
-        <div id="qr-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <img id="qr-code" src="" alt="QR Code">
+{% block content %}
+<h1>TempShare</h1>
+
+<div class="actions">
+    <label for="file-input" class="button">
+        <span class="material-icons">add</span>
+        Add File
+    </label>
+    <input type="file" id="file-input" style="display: none;">
+    
+    <button id="share-link" class="button" data-url="{{ share_url }}">
+        <span class="material-icons">share</span>
+        Share Link
+    </button>
+    
+    <button id="generate-qr" class="button">
+        <span class="material-icons">qr_code</span>
+        Generate QR
+    </button>
+</div>
+
+<div id="qr-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="qr-code" src="" alt="QR Code">
+    </div>
+</div>
+
+<div class="files-container">
+    <h2>Shared Files</h2>
+    <div id="files-list">
+        {% for file in files %}
+        <div class="file-item" data-filename="{{ file }}">
+            <span class="file-name">{{ file }}</span>
+            <div class="button-container">
+                <button class="download-file" onclick="downloadFile('{{ file }}')">
+                    <span class="material-icons">download</span>
+                </button>
+                <button class="remove-file" onclick="removeFile('{{ file }}')">
+                    <span class="material-icons">delete</span>
+                </button>
             </div>
         </div>
-
-        <div class="files-container">
-            <h2>Shared Files</h2>
-            <div id="files-list"></div>
-        </div>
+        {% endfor %}
     </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script src="/static/js/app.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-    </script>
-</body>
-</html> 
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.flash-messages {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.flash-message {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+</style>
+{% endblock %} 

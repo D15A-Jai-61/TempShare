@@ -30,14 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const result = await response.json();
-            if (response.ok) {
-                console.log('File uploaded successfully');
-            } else {
-                alert(result.error || 'Error uploading file');
+            if (!response.ok) {
+                showFlashMessage(result.error || 'Error uploading file', 'error');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error uploading file');
+            showFlashMessage('Error uploading file', 'error');
         }
 
         // Clear the input
@@ -46,23 +44,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Share link handling
     shareLink.addEventListener('click', async () => {
+        const url = shareLink.dataset.url;
         try {
-            const response = await fetch('/get-url');
-            const data = await response.json();
-            
             if (navigator.share) {
                 await navigator.share({
                     title: 'TempShare',
                     text: 'Join my temporary file sharing session',
-                    url: data.url
+                    url: url
                 });
             } else {
-                await navigator.clipboard.writeText(data.url);
-                alert('Link copied to clipboard!');
+                await navigator.clipboard.writeText(url);
+                showFlashMessage('Link copied to clipboard!', 'success');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error sharing link');
+            showFlashMessage('Error sharing link', 'error');
         }
     });
 
@@ -75,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             qrModal.style.display = 'block';
         } catch (error) {
             console.error('Error:', error);
-            alert('Error generating QR code');
+            showFlashMessage('Error generating QR code', 'error');
         }
     });
 
@@ -92,7 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Socket.io event handlers
     socket.on('file_added', (data) => {
-        addFileToList(data.filename);
+        if (!document.querySelector(`[data-filename="${data.filename}"]`)) {
+            addFileToList(data.filename);
+        }
     });
 
     socket.on('file_removed', (data) => {
@@ -118,12 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const downloadButton = document.createElement('button');
         downloadButton.className = 'download-file';
         downloadButton.innerHTML = '<span class="material-icons">download</span>';
-        downloadButton.addEventListener('click', () => downloadFile(filename));
+        downloadButton.onclick = () => downloadFile(filename);
 
         const removeButton = document.createElement('button');
         removeButton.className = 'remove-file';
         removeButton.innerHTML = '<span class="material-icons">delete</span>';
-        removeButton.addEventListener('click', () => removeFile(filename));
+        removeButton.onclick = () => removeFile(filename);
 
         buttonContainer.appendChild(downloadButton);
         buttonContainer.appendChild(removeButton);
@@ -147,7 +145,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error removing file');
+            showFlashMessage('Error removing file', 'error');
         }
     }
-}); 
+});
+
+// Helper functions
+function showFlashMessage(message, type = 'info') {
+    const flashContainer = document.querySelector('.flash-messages') || createFlashContainer();
+    
+    const messageElement = document.createElement('div');
+    messageElement.className = `flash-message ${type}`;
+    messageElement.textContent = message;
+    
+    flashContainer.appendChild(messageElement);
+    
+    // Remove the message after 3 seconds
+    setTimeout(() => {
+        messageElement.style.opacity = '0';
+        setTimeout(() => messageElement.remove(), 300);
+    }, 3000);
+}
+
+function createFlashContainer() {
+    const container = document.createElement('div');
+    container.className = 'flash-messages';
+    document.body.appendChild(container);
+    return container;
+} 

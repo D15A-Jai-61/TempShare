@@ -1,7 +1,7 @@
 import os
 import re
 import qrcode
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, flash, url_for
 from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 import socket
@@ -52,18 +52,22 @@ def is_valid_filename(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    share_url = f'http://{get_local_ip()}:5000'
+    return render_template('index.html', files=list(files.keys()), share_url=share_url)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
+        flash('No file part', 'error')
         return jsonify({'error': 'No file part'}), 400
     
     file = request.files['file']
     if file.filename == '':
+        flash('No selected file', 'error')
         return jsonify({'error': 'No selected file'}), 400
 
     if not is_valid_filename(file.filename):
+        flash('Invalid filename', 'error')
         return jsonify({'error': 'Invalid filename'}), 400
 
     filename = secure_filename(file.filename)
@@ -72,6 +76,7 @@ def upload_file():
     
     files[filename] = file_path
     socketio.emit('file_added', {'filename': filename})
+    flash('File uploaded successfully', 'success')
     
     return jsonify({'message': 'File uploaded successfully', 'filename': filename})
 
@@ -91,7 +96,9 @@ def download_file(filename):
                 mimetype='application/octet-stream'
             )
         except Exception as e:
+            flash('Error downloading file', 'error')
             return jsonify({'error': 'Error downloading file'}), 500
+    flash('File not found', 'error')
     return jsonify({'error': 'File not found'}), 404
 
 @app.route('/remove/<filename>')
@@ -102,7 +109,9 @@ def remove_file(filename):
             os.remove(file_path)
         del files[filename]
         socketio.emit('file_removed', {'filename': filename})
+        flash('File removed successfully', 'success')
         return jsonify({'message': 'File removed successfully'})
+    flash('File not found', 'error')
     return jsonify({'error': 'File not found'}), 404
 
 @app.route('/get-qr')
