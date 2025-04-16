@@ -1,11 +1,10 @@
-# TempShare PWA
+# TempShare
 
-TempShare is a Progressive Web Application (PWA) that allows users to share files temporarily within a local network. Files are stored temporarily and are automatically removed when users disconnect or when the server stops.
+TempShare is a Python web app that allows users to share files temporarily within a local network. Files are stored temporarily and are automatically removed when users disconnect or when the server stops.
 
 ## Features
 
 - Real-time file sharing within local network
-- Progressive Web App (installable on devices)
 - Material Design UI
 - QR code generation for easy sharing
 - File upload with extension validation
@@ -26,16 +25,14 @@ TempShare is a Progressive Web Application (PWA) that allows users to share file
 - **QRCode**: QR code generation for sharing
 - **Pillow**: Image processing for QR codes
 - **Material Icons**: UI icons from Google
-- **Service Workers**: PWA offline functionality
 - **WebSockets**: Real-time updates
-- **Progressive Web App**: Installable web application
 
 ## Project Setup
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/tempshare_PWA.git
-   cd tempshare_PWA
+   git clone https://github.com/yourusername/tempshare.git
+   cd tempshare
    ```
 
 2. Create a virtual environment:
@@ -70,17 +67,16 @@ TempShare is a Progressive Web Application (PWA) that allows users to share file
 ## Project Structure
 
 ```
-tempshare_PWA/
+tempshare/
 ├── app.py                 # Main Flask application
 ├── requirements.txt       # Python dependencies
 ├── static/
 │   ├── css/
 │   │   └── style.css     # Application styling
-│   ├── js/
-│   │   └── app.js        # Client-side JavaScript
-│   ├── manifest.json     # PWA manifest
-│   └── service-worker.js # PWA service worker
+│   └── js/
+│       └── app.js        # Client-side JavaScript
 ├── templates/
+│   ├── base.html         # Base template with common structure
 │   └── index.html        # Main HTML template
 └── uploads/              # Temporary file storage
 ```

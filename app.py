@@ -135,13 +135,5 @@ def get_url():
     local_ip = get_local_ip()
     return jsonify({'url': f'http://{local_ip}:5000'})
 
-@app.route('/manifest.json')
-def manifest():
-    return app.send_static_file('manifest.json')
-
-@app.route('/service-worker.js')
-def service_worker():
-    return app.send_static_file('service-worker.js')
-
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True) 
