@@ -32,7 +32,7 @@ TempShare is a Python web app that allows users to share files temporarily withi
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/tempshare.git
-   cd tempshare
+   cd TempShare
    ```
 
 2. Create a virtual environment:
@@ -54,6 +54,8 @@ TempShare is a Python web app that allows users to share files temporarily withi
    ```bash
    pip install -r requirements.txt
    ```
+
+# Note : Before running the app, you might have to create a directory/folder called 'uploads' in the root directory/folder of the project, if the app doesn't create it on its own when running. The QR code and all shared files are stored there during the session.
 
 5. Run the application:
    ```bash
